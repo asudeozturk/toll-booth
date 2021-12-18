@@ -1,53 +1,53 @@
 public class TollBoothLine{
+
 	private Vehicle[] vehicles;
 	private int limit;
 	private int currentNum;
 	private int maxLength;
-	
-	public TollBoothLine(int size){ 
+
+	public TollBoothLine(int size){
 		limit = size;
-		vehicles = new Vehicle[limit];	
+		vehicles = new Vehicle[limit];
 	}
-	
-	int getLength() { return currentNum;}
-	int getMaxLength() { return maxLength;}
-	
-	public boolean addVehicleEnd(Vehicle v) { 
-		boolean condition = false;
+
+	int getLength() { return currentNum; }
+	int getMaxLength() { return maxLength; }
+
+
+	//If space available, add new vehicle at the end of the line
+	public boolean addVehicleEnd(Vehicle v) {
 		for(int i = 0; i < vehicles.length; i++) {
 			if(vehicles[i] == null) {
 				vehicles[i] = v;
-				condition = true;
 				currentNum++;
-				if(currentNum > maxLength) 
+				if(currentNum > maxLength)
 					maxLength++;
-				break;				
-			}	
+				return true;
+			}
 		}
-		return condition;
+		return false;
 	}
-	
-	public Vehicle removeVehicleStart() { 
+
+	//If line isn't empty, remove the first vehicle on the line
+	//Move other vehicles to front
+	public Vehicle removeVehicleStart() {
 		Vehicle obj= null;
 		if(vehicles != null){
 			obj = copyVehicleStart();
-			
 			for(int i =0; i < currentNum; i++) {
-				if(i == (currentNum -1)){
-					vehicles[i] = null;
-					currentNum--;
-				}
-				else {
 					vehicles[i] = vehicles[i+1];
-				}		
-			}	
+			}
+			vehicles[currentNum -1] = null;
+			currentNum--;
 		}
 		return obj;
 	}
-	
-	public Vehicle copyVehicleStart() { 
-		Vehicle copy = new Vehicle();
+
+	//Copy the first vehicle on the line
+	public Vehicle copyVehicleStart() {
+		Vehicle copy = null;
 		if(vehicles != null){
+			copy = new Vehicle();
 			copy.setUniqueID(vehicles[0].getUniqueID());
 			copy.setAxles(vehicles[0].getAxles());
 			copy.setTollType(vehicles[0].getTollType());
@@ -55,21 +55,18 @@ public class TollBoothLine{
 			copy.setArriveBoothTime(vehicles[0].getArriveBoothTime());
 			copy.setLeaveTime(vehicles[0].getLeaveTime());
 		}
-		else
-			copy =null;
 		return copy;
 	}
-	
-	public boolean replaceVehicleStart(Vehicle v) { 
-		boolean condition = true;
+
+	//Put given vehicle at the beginning of line
+	public boolean replaceVehicleStart(Vehicle v) {
 		if(vehicles != null){
 			vehicles[0] = v;
+			return true;
 		}
-		else 
-			condition = false;
-		return condition;
+		return false;
 	}
-	
+
 	public String toString() {
 		String output= "";
 		for(int i =0; i < vehicles.length; i++){
@@ -78,5 +75,5 @@ public class TollBoothLine{
 		}
 		return output + "Maximum length: " + maxLength;
 	}
-	
+
 }
